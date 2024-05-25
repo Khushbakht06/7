@@ -1,0 +1,44 @@
+'''Задание на л.р. №7
+Требуется для своего варианта второй части л.р. №6 (усложненной программы) разработать реализацию с использованием графического интерфейса. Допускается использовать любую графическую библиотеку питона.  
+Рекомендуется использовать внутреннюю библиотеку питона  tkinter.'''
+
+import tkinter as tk
+from tkinter import scrolledtext
+from itertools import permutations
+
+def generate_lexemes_with_constraint(word, min_length):
+    lexemes = set()
+    for r in range(min_length, len(word) + 1):
+        lexemes.update([''.join(p) for p in permutations(word, r)])
+    return lexemes
+
+def find_lexemes():
+    word = entry_word.get()
+    min_length = int(entry_min_length.get())
+    lexemes_with_constraint = generate_lexemes_with_constraint(word, min_length)
+    output_text.delete('1.0', tk.END)
+    output_text.insert(tk.END, "\n".join(lexemes_with_constraint))
+
+# Создание основного окна
+root = tk.Tk()
+root.title("Поиск лексем")
+
+# Создание и размещение элементов управления
+label_word = tk.Label(root, text="Введите слово:")
+label_word.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+entry_word = tk.Entry(root)
+entry_word.grid(row=0, column=1, padx=10, pady=5)
+
+label_min_length = tk.Label(root, text="Минимальная длина лексемы:")
+label_min_length.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+entry_min_length = tk.Entry(root)
+entry_min_length.grid(row=1, column=1, padx=10, pady=5)
+
+button_search = tk.Button(root, text="Найти лексемы", command=find_lexemes)
+button_search.grid(row=2, columnspan=2, padx=10, pady=10)
+
+output_text = scrolledtext.ScrolledText(root, width=40, height=10, wrap=tk.WORD)
+output_text.grid(row=3, columnspan=2, padx=10, pady=5)
+
+# Запуск основного цикла обработки событий
+root.mainloop()
